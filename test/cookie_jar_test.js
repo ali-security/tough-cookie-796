@@ -39,7 +39,7 @@ var CookieJar = tough.CookieJar;
 var atNow = Date.now();
 
 function at(offset) {
-  return {now: new Date(atNow + offset)};
+  return { now: new Date(atNow + offset) };
 }
 
 vows
@@ -182,7 +182,7 @@ vows
       topic: function () {
         var cj = new CookieJar();
         var c = Cookie.parse("a=b; Domain=example.com; Path=/; HttpOnly");
-        cj.setCookie(c, 'http://example.com/index.html', {http: false}, this.callback);
+        cj.setCookie(c, 'http://example.com/index.html', { http: false }, this.callback);
       },
       "fails": function (err, c) {
         assert.match(err.message, /HttpOnly/i);
@@ -246,7 +246,7 @@ vows
       "then retrieving for https://example.com": {
         topic: function (cj, oldResults) {
           assert.ok(oldResults);
-          cj.getCookies('https://example.com', {secure: true}, this.callback);
+          cj.getCookies('https://example.com', { secure: true }, this.callback);
         },
         "get a secure example cookie with others": function (cookies) {
           var names = cookies.map(function (c) {
@@ -294,7 +294,7 @@ vows
       "then retrieving for http://example.com, non-HTTP": {
         topic: function (cj, oldResults) {
           assert.ok(oldResults);
-          cj.getCookies('http://example.com', {http: false}, this.callback);
+          cj.getCookies('http://example.com', { http: false }, this.callback);
         },
         "get a bunch of cookies": function (cookies) {
           var names = cookies.map(function (c) {
@@ -367,7 +367,7 @@ vows
           results = results.filter(function (e) {
             return e !== undefined
           });
-          cb(err, {cj: cj, cookies: results, now: now});
+          cb(err, { cj: cj, cookies: results, now: now });
         });
       },
       "all got set": function (err, t) {
@@ -420,7 +420,7 @@ vows
             return cb(err, cj);
           };
           var cj = new CookieJar();
-          cj.setCookie('k=11; Domain=example.ca; Path=/; HttpOnly', 'http://example.ca', {http: true}, next);
+          cj.setCookie('k=11; Domain=example.ca; Path=/; HttpOnly', 'http://example.ca', { http: true }, next);
         },
         "initial cookie is set": function (err, cj) {
           assert.ok(!err);
@@ -433,7 +433,7 @@ vows
               c = null;
               cb(null, err);
             };
-            cj.setCookie('k=12; Domain=example.ca; Path=/', 'http://example.ca', {http: false}, next);
+            cj.setCookie('k=12; Domain=example.ca; Path=/', 'http://example.ca', { http: false }, next);
           },
           "it's an error": function (err) {
             assert.ok(err);
@@ -441,7 +441,7 @@ vows
           "then, checking the original": {
             topic: function (ignored, cj) {
               assert.ok(cj instanceof CookieJar);
-              cj.getCookies('http://example.ca', {http: true}, this.callback);
+              cj.getCookies('http://example.ca', { http: true }, this.callback);
             },
             "cookie has original value": function (err, cookies) {
               assert.equal(err, null);
@@ -468,7 +468,7 @@ vows
   .addBatch({
     "Loose Mode": {
       topic: function () {
-        var cj = new CookieJar(null, {looseMode: true});
+        var cj = new CookieJar(null, { looseMode: true });
         cj.setCookieSync("FooBar", 'http://www.foonet.net', {});
         return cj;
       },
@@ -487,9 +487,9 @@ vows
         var cookie1 = Cookie.parse("a=b; Domain=example.com; Path=/");
         var cookie2 = Cookie.parse("a=b; Domain=foo.com; Path=/");
         var cookie3 = Cookie.parse("foo=bar; Domain=foo.com; Path=/");
-        jar.setCookie(cookie1, 'http://example.com/index.html', function () {});
-        jar.setCookie(cookie2, 'http://foo.com/index.html', function () {});
-        jar.setCookie(cookie3, 'http://foo.com/index.html', function () {});
+        jar.setCookie(cookie1, 'http://example.com/index.html', function () { });
+        jar.setCookie(cookie2, 'http://foo.com/index.html', function () { });
+        jar.setCookie(cookie3, 'http://foo.com/index.html', function () { });
 
         var cb = this.callback;
         jar.removeAllCookies(function (err) {
@@ -500,10 +500,10 @@ vows
         assert(err == null);
       },
       "load cookies from the jar": {
-        topic: function(jar) {
+        topic: function (jar) {
           jar.store.getAllCookies(this.callback);
         },
-        "no cookies in the jar": function(err, cookies) {
+        "no cookies in the jar": function (err, cookies) {
           assert(err == null);
           assert(cookies != null);
           assert(cookies.length === 0, 'cookies were not removed');
@@ -517,9 +517,9 @@ vows
         var cookie1 = Cookie.parse("a=b; Domain=example.com; Path=/");
         var cookie2 = Cookie.parse("a=b; Domain=foo.com; Path=/");
         var cookie3 = Cookie.parse("foo=bar; Domain=foo.com; Path=/");
-        jar.setCookie(cookie1, 'http://example.com/index.html', function () {});
-        jar.setCookie(cookie2, 'http://foo.com/index.html', function () {});
-        jar.setCookie(cookie3, 'http://foo.com/index.html', function () {});
+        jar.setCookie(cookie1, 'http://example.com/index.html', function () { });
+        jar.setCookie(cookie2, 'http://foo.com/index.html', function () { });
+        jar.setCookie(cookie3, 'http://foo.com/index.html', function () { });
 
         var cb = this.callback;
         jar.removeAllCookies(function (err) {
@@ -530,10 +530,10 @@ vows
         assert(err == null);
       },
       "load cookies from the jar": {
-        topic: function(jar) {
+        topic: function (jar) {
           jar.store.getAllCookies(this.callback);
         },
-        "no cookies in the jar": function(err, cookies) {
+        "no cookies in the jar": function (err, cookies) {
           assert(err == null);
           assert(cookies != null);
           assert(cookies.length === 0, 'cookies were not removed');
@@ -544,27 +544,51 @@ vows
   .addBatch({
     "Issue 132 - setCookie": {
       "with foreign object": {
-        topic: function() {
+        topic: function () {
           var jar = new CookieJar();
-          jar.setCookie({key:"x",value:"y"}, "http://example.com/", this.callback);
+          jar.setCookie({ key: "x", value: "y" }, "http://example.com/", this.callback);
         },
-        "results in an error": function(err, cookie) {
+        "results in an error": function (err, cookie) {
           assert(err != null);
           assert(!cookie);
           assert.equal(err.message, "First argument to setCookie must be a Cookie object or string");
         },
       },
       "with String instance": {
-        topic: function() {
+        topic: function () {
           var jar = new CookieJar();
           jar.setCookie(new String("x=y; Domain=example.com; Path=/"), "http://example.com/", this.callback);
         },
-        "is fine": function(err, cookie) {
+        "is fine": function (err, cookie) {
           assert(!err);
           assert(!!cookie);
           assert.instanceOf(cookie, Cookie);
           assert.equal(cookie.key, "x");
         },
+      }
+    }
+  }).addBatch({
+    "Issue #282 - Prototype pollution": {
+      "when setting a cookie with the domain __proto__": {
+        topic: function () {
+          var jar = new tough.CookieJar(undefined, {
+            rejectPublicSuffixes: false
+          });
+          // try to pollute the prototype
+          jar.setCookieSync(
+            "Slonser=polluted; Domain=__proto__; Path=/notauth",
+            "https://__proto__/admin"
+          );
+          jar.setCookieSync(
+            "Auth=Lol; Domain=google.com; Path=/notauth",
+            "https://google.com/"
+          );
+          this.callback();
+        },
+        "results in a cookie that is not affected by the attempted prototype pollution": function () {
+          var pollutedObject = {};
+          assert(pollutedObject["/notauth"] === undefined);
+        }
       }
     }
   })
